@@ -11,7 +11,7 @@
 ### END INIT INFO
 
 NAME="Brook-pf"
-NAME_BIN="brook relays"
+NAME_BIN="brook relay"
 FILE="/usr/local/brook-pf"
 CONF="${FILE}/brook.conf"
 LOG="${FILE}/brook.log"
@@ -22,7 +22,7 @@ Error="${Red_font_prefix}[错误]${Font_color_suffix}"
 RETVAL=0
 
 check_running(){
-	PID=`ps -ef |grep "${NAME_BIN}" |grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}'`
+	PID=`ps -ef |grep "${NAME_BIN}" |grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}' |xargs echo`
 	if [[ ! -z ${PID} ]]; then
 		return 0
 	else
@@ -83,9 +83,11 @@ do_start(){
 			user_port=$(echo "${user_all}"|sed -n "${integer}p"|awk '{print $1}')
 			user_ip_pf=$(echo "${user_all}"|sed -n "${integer}p"|awk '{print $2}')
 			user_port_pf=$(echo "${user_all}"|sed -n "${integer}p"|awk '{print $3}')
-			servers_all="${servers_all}---fromto \":${user_port} ${user_ip_pf}:${user_port_pf}\" "
+			# servers_all="${servers_all}---fromto \":${user_port} ${user_ip_pf}:${user_port_pf}\" "
+			server="--from \":${user_port} --to ${user_ip_pf}:${user_port_pf}\""
+			eval nohup ./brook relay $(echo ${server}) >> "${LOG}" 2>&1 &
 		done
-		eval nohup ./brook relays $(echo ${servers_all}) >> "${LOG}" 2>&1 &
+		# eval nohup ./brook relays $(echo ${servers_all}) >> "${LOG}" 2>&1 &
 		sleep 2s
 		check_running
 		if [[ $? -eq 0 ]]; then

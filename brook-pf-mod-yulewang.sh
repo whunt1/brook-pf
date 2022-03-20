@@ -5,8 +5,8 @@ export PATH
 #=================================================
 #   System Required: CentOS/Debian/Ubuntu
 #   Description: Brook
-#   Version: 2.0.0
-#   Author: Toyo, yulewang(DDNS features), ECIAP(Modify), whunt1(Fixed)
+#   Version: 1.0.1
+#   Author: Toyo, yulewang(DDNS features), ECIAP(Modify)
 #   Blog: https://doub.io/wlzy-jc37/
 #=================================================
 
@@ -65,7 +65,7 @@ check_crontab_installed_status(){
     fi
 }
 check_pid(){
-    PID=$(ps -ef| grep "brook relay"| grep -v grep| grep -v ".sh"| grep -v "init.d"| grep -v "service"| awk '{print $2}' |xargs echo)
+    PID=$(ps -ef| grep "brook relays"| grep -v grep| grep -v ".sh"| grep -v "init.d"| grep -v "service"| awk '{print $2}')
 }
 check_new_ver(){
     echo -e "请输入要下载安装的 Brook 版本号 ${Green_font_prefix}[ 格式是日期，例如: v20180909 ]${Font_color_suffix}
@@ -148,14 +148,14 @@ Download_brook(){
 }
 Service_brook(){
     if [[ ${release} = "centos" ]]; then
-        if ! wget --no-check-certificate https://raw.githubusercontent.com/whunt1/brook-pf/master/brook-pf_centos -O /etc/init.d/brook-pf; then
+        if ! wget --no-check-certificate https://raw.githubusercontent.com/ToyoDAdoubi/doubi/master/service/brook-pf_centos -O /etc/init.d/brook-pf; then
             echo -e "${Error} Brook服务 管理脚本下载失败 !" && exit 1
         fi
         chmod +x /etc/init.d/brook-pf
         chkconfig --add brook-pf
         chkconfig brook-pf on
     else
-        if ! wget --no-check-certificate https://raw.githubusercontent.com/whunt1/brook-pf/master/brook-pf_debian -O /etc/init.d/brook-pf; then
+        if ! wget --no-check-certificate https://raw.githubusercontent.com/ToyoDAdoubi/doubi/master/service/brook-pf_debian -O /etc/init.d/brook-pf; then
             echo -e "${Error} Brook服务 管理脚本下载失败 !" && exit 1
         fi
         chmod +x /etc/init.d/brook-pf
